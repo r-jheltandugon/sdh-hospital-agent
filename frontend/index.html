@@ -7,22 +7,13 @@
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <h1>AI Hospital Agent</h1>
-    <form id="symptomsForm">
-        <label for="symptoms">Enter Symptoms:</label><br>
-        <textarea id="symptoms" name="symptoms" rows="4" cols="50" placeholder="Enter symptoms here..."></textarea><br><br>
-        
-        <label for="heart_rate">Heart Rate:</label><br>
-        <input type="number" id="heart_rate" name="heart_rate" required><br><br>
-        
-        <label for="blood_pressure">Blood Pressure:</label><br>
-        <input type="text" id="blood_pressure" name="blood_pressure" required><br><br>
-        
-        <button type="submit">Submit</button>
-    </form>
-    <div id="result"></div>
+    <h1>AI Hospital Doctor</h1>
+    <div id="chat-box">
+        <div id="messages"></div>
+        <input type="text" id="user-input" placeholder="Type your response..." />
+        <button onclick="sendMessage()">Send</button>
+    </div>
 
     <script src="app.js"></script>
 </body>
 </html>
-
