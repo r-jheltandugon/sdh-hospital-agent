@@ -1,6 +1,6 @@
 from fastapi import FastAPI
 from pydantic import BaseModel
-import model  # This will hold the logic for predicting disease based on symptoms
+from . import model  # This will hold the logic for predicting disease based on symptoms
 
 app = FastAPI()
 
