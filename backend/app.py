@@ -1,47 +1,49 @@
-# backend/app.py
-
 from flask import Flask, request, jsonify
 from flask_cors import CORS
-import openai
-import os
 from dotenv import load_dotenv
+import os
+from openai import OpenAI
 
-# Load environment variables (like OpenAI API key)
-load_dotenv()
+# Load environment variables
+load_dotenv(dotenv_path=os.path.join(os.path.dirname(__file__), '.env'))
 
-# Initialize Flask app
+# Get API key from .env
+aiml_api_key = os.getenv("AIML_API_KEY")
+
+if not aiml_api_key:
+    raise ValueError("AIML_API_KEY not found in .env file")
+
+# Use AIMLAPI endpoint (OpenAI-compatible)
+client = OpenAI(
+    base_url="https://api.aimlapi.com/v1",
+    api_key=aiml_api_key
+)
+
 app = Flask(__name__)
-
-# Enable CORS for frontend access
 CORS(app)
-
-# OpenAI API key from .env
-openai.api_key = os.getenv("OPENAI_API_KEY")
-
-@app.route("/")
-def home():
-    return "Welcome to the AI Chatbot backend!"
 
 @app.route("/chat", methods=["POST"])
 def chat():
-    # Get the user's message from the frontend
-    user_message = request.json.get("message", "")
+    data = request.get_json()
+    user_message = data.get("message", "")
 
-    if not user_message:
-        return jsonify({"error": "No message provided"}), 400
+    try:
+        response = client.chat.completions.create(
+            model="gpt-4o",
+            messages=[
+                {"role": "system", "content": "You are a helpful assistant."},
+                {"role": "user", "content": user_message}
+            ]
+        )
+        reply = response.choices[0].message.content.strip()
+        return jsonify({"reply": reply})
+    except Exception as e:
+        print("Error:", e)
+        return jsonify({"reply": "Something went wrong!"}), 500
 
-    # Call OpenAI API with the user's message
-    response = openai.ChatCompletion.create(
-        model="gpt-3.5-turbo",  # Or GPT-4 if you prefer
-        messages=[{"role": "user", "content": user_message}],
-    )
-
-    # Extract AI's reply from the OpenAI response
-    ai_reply = response.choices[0].message.content.strip()
-
-    # Return the AI's response to the frontend
-    return jsonify({"reply": ai_reply})
-
+@app.route("/")
+def index():
+    return "Backend is running!"
 
 if __name__ == "__main__":
     app.run(debug=True)
