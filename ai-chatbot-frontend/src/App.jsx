@@ -25,7 +25,7 @@ function App() {
   return (
     <div className="min-h-screen bg-gray-100 flex flex-col items-center justify-center p-4">
       <div className="w-full max-w-xl bg-white shadow-md rounded-lg p-4">
-        <h1 className="text-xl font-bold mb-4">AI Chatbot</h1>
+        <h1 className="text-xl font-bold mb-4">Salcedo Doctor's Hospital AI Chatbot</h1>
         <div className="h-64 overflow-y-auto border rounded p-2 mb-4">
           {messages.map((msg, idx) => (
             <div key={idx} className={`mb-2 ${msg.role === 'user' ? 'text-right' : 'text-left'}`}>
